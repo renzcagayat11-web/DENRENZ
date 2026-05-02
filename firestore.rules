@@ -74,7 +74,7 @@ service cloud.firestore {
       allow update: if request.auth != null && (request.auth.token.role == 'staff' || request.auth.token.role == 'admin');
       allow delete: if request.auth != null && request.auth.token.role == 'admin';
     }
-
+  //test
     // default deny
     match /{document=**} {
       allow read, write: if false;
