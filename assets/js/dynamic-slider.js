@@ -1,4 +1,7 @@
 // Dynamic Announcement Slider with Firebase Integration
+import { auth, db } from './firebase-config.js';
+import { getFirestore, collection, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
 document.addEventListener('DOMContentLoaded', function() {
   const sliderTrack = document.getElementById('sliderTrack');
   const prevBtn = document.getElementById('prevBtn');
@@ -22,13 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🔄 Loading announcements from Firebase...');
     
     try {
-      // Import Firebase modules
-      const { getFirestore, collection, getDocs, query, where, orderBy } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-      const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
-      
-      // Use centralized Firebase config
-      const { auth, db } = await import('./firebase-config.js');
-      
       console.log('📡 Connected to Firebase, fetching announcements...');
       
       // Get announcements from Firebase
