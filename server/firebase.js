@@ -7,7 +7,26 @@ let initialized = false;
 function initFirebase() {
   if (initialized) return admin;
   
-  // Try the actual service account key filename first (in parent directory)
+  // 1. Try raw JSON from environment variable (Best for Cloudflare/Render/Heroku)
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      const firebaseConfig = {
+        credential: admin.credential.cert(serviceAccount),
+        projectId: serviceAccount.project_id,
+        databaseURL: `https://${serviceAccount.project_id}-default-rtdb.firebaseio.com`,
+        storageBucket: `${serviceAccount.project_id}.appspot.com`
+      };
+      admin.initializeApp(firebaseConfig);
+      initialized = true;
+      console.log('Firebase initialized using FIREBASE_SERVICE_ACCOUNT env variable');
+      return admin;
+    } catch (error) {
+      console.error('Error parsing FIREBASE_SERVICE_ACCOUNT env variable:', error);
+    }
+  }
+
+  // 2. Try the actual service account key filename first (in parent directory)
   const keyPath = path.join(__dirname, '..', 'denr-permit-firebase-adminsdk-fbsvc-278e8293a6.json');
   if (fs.existsSync(keyPath)) {
     try {
@@ -32,7 +51,7 @@ function initFirebase() {
     }
   }
   
-  // Fallback to generic serviceAccountKey.json
+  // 3. Fallback to generic serviceAccountKey.json
   const fallbackKeyPath = path.join(__dirname, 'serviceAccountKey.json');
   if (fs.existsSync(fallbackKeyPath)) {
     try {
@@ -53,7 +72,7 @@ function initFirebase() {
     }
   }
 
-  // Try environment variables
+  // 4. Try GOOGLE_APPLICATION_CREDENTIALS environment variable (file path)
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     try {
       admin.initializeApp();
