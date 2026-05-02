@@ -254,7 +254,7 @@ onAuthStateChanged(auth, async (user) => {
     }
   } else {
     console.log('Admin dashboard: No user authenticated, redirecting...');
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }
 });
 
@@ -667,7 +667,7 @@ if (confirmLogout) {
       await logAudit('User Logout', 'User logged out manually', 'user', auth.currentUser?.uid, null, null, 'success');
       await signOut(auth);
       logoutModal.style.display = 'none';
-      window.location.href = 'index.html';
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
     }

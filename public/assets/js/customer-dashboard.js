@@ -516,7 +516,7 @@ onAuthStateChanged(auth, async (user) => {
         if (userData.role === 'customer' && !user.emailVerified) {
           console.log('Customer dashboard: Email not verified, redirecting...');
           showAlert('Please verify your email before accessing the dashboard. Check your inbox for the verification link.', 'warning');
-          window.location.href = 'index.html';
+          window.location.href = '/';
           return;
         }
         
@@ -581,7 +581,7 @@ onAuthStateChanged(auth, async (user) => {
       
       if (!user.emailVerified) {
         showAlert('Please verify your email before accessing the dashboard. Check your inbox for the verification link.', 'warning');
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
       }
       
@@ -591,7 +591,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     // User not logged in - redirect to login page
     // The justLoggedOut flag prevents auto-redirect loops
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }
 });
 
@@ -3208,7 +3208,7 @@ function deleteAccount() {
     }
   }).then(() => {
     showAlert('Account deleted successfully. You will be redirected to the home page.', 'success');
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }).catch((error) => {
     console.error('Error deleting account:', error);
     if (error.code === 'auth/requires-recent-login') {
@@ -3259,7 +3259,7 @@ if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
     try {
       await signOut(auth);
-      window.location.href = 'index.html';
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -3316,7 +3316,7 @@ function logout() {
   // Clear current section so on login it goes to dashboard
   localStorage.removeItem('currentSection');
   auth.signOut().then(() => {
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }).catch((error) => {
     console.error('Logout error:', error);
     sessionStorage.removeItem('justLoggedOut');

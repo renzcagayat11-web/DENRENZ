@@ -311,7 +311,7 @@ setTimeout(() => {
       }
     } else {
       console.log('Staff dashboard: No user authenticated, redirecting...');
-      window.location.href = 'index.html';
+      window.location.href = '/';
     }
 });
 }, 1000); // Wait 1 second for Firebase to be fully initialized
@@ -2328,7 +2328,7 @@ if (confirmLogout) {
   confirmLogout.addEventListener('click', async () => {
     try {
       await signOut(auth);
-      window.location.href = 'index.html';
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
     }
