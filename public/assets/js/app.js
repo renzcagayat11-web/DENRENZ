@@ -336,10 +336,68 @@ document.addEventListener('DOMContentLoaded', () => {
   if (authSignupBtn) {
     authSignupBtn.addEventListener('click', async () => {
       try {
+        // Clear previous errors
+        clearFieldError('signupEmail');
+        clearFieldError('signupPassword');
+        clearFieldError('signupConfirm');
+        clearFieldError('firstName');
+        clearFieldError('surname');
+        clearFieldError('mobile');
+        
         const email = (signupEmail.value || authEmail.value || '').trim();
-        const pass = signupPassword.value; const confirm = signupConfirm.value;
-        if(!email || !pass) return authMsg.textContent = 'Please enter email and password.';
-        if(pass !== confirm) return authMsg.textContent = 'Passwords do not match.';
+        const pass = signupPassword.value; 
+        const confirm = signupConfirm.value;
+        const fName = firstName.value?.trim() || '';
+        const sName = surname.value?.trim() || '';
+        const mobileNum = mobile.value?.trim() || '';
+        
+        let isValid = true;
+        
+        // Email validation
+        if (!email) {
+          showFieldError('signupEmail', 'Please enter your email address.');
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          showFieldError('signupEmail', 'Please enter a valid email address (e.g., name@example.com).');
+          isValid = false;
+        }
+        
+        // Password validation (minimum 6 characters - same as login)
+        if (!pass) {
+          showFieldError('signupPassword', 'Please enter a password.');
+          isValid = false;
+        } else if (pass.length < 6) {
+          showFieldError('signupPassword', 'Password must be at least 6 characters long.');
+          isValid = false;
+        }
+        
+        // Confirm password
+        if (!confirm) {
+          showFieldError('signupConfirm', 'Please confirm your password.');
+          isValid = false;
+        } else if (pass !== confirm) {
+          showFieldError('signupConfirm', 'Passwords do not match.');
+          isValid = false;
+        }
+        
+        // Required profile fields
+        if (!fName) {
+          showFieldError('firstName', 'Please enter your first name.');
+          isValid = false;
+        }
+        
+        if (!sName) {
+          showFieldError('surname', 'Please enter your surname.');
+          isValid = false;
+        }
+        
+        if (!mobileNum) {
+          showFieldError('mobile', 'Please enter your mobile number.');
+          isValid = false;
+        }
+        
+        if (!isValid) return;
+        
         // create user
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         // store profile fields as customer
@@ -930,9 +988,6 @@ if(showSignupLink) showSignupLink.addEventListener('click', (e)=>{ e.preventDefa
 // toggle back to signin from signup
 const showSigninLink = document.getElementById('showSignin');
 if(showSigninLink) showSigninLink.addEventListener('click', (e)=>{ e.preventDefault(); authSignupForm.style.display='none'; authSigninForm.style.display=''; document.getElementById('authModalTitle').textContent='Login to Your Account'; });
-
-// eye toggle for password fields
-qa('.eye-btn').forEach(b=> b.addEventListener('click', (e)=>{ const t = e.currentTarget.dataset.target; const inp = document.getElementById(t); if(!inp) return; inp.type = inp.type === 'password' ? 'text' : 'password'; }));
 
 // show map pin placeholder
 if(showMapPin) showMapPin.addEventListener('click', () => {
